@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from './login.module.css';
+import axios from 'axios';
 
 export default function Login() {
 	console.log('Login')
@@ -8,9 +9,13 @@ export default function Login() {
 	const [ password, setPassword ] = useState();
 	const [ error, setError ] = useState();
 
-  const handleLogin = () => {
-    localStorage.setItem('user', true)
-    window.location = '/';
+  const handleLogin = async() => {
+    console.log("process.env", process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API)
+    const { data } = await axios
+			.get(process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API)
+    console.log("data", data)
+    //localStorage.setItem('user', true)
+    //window.location = '/';
 	};
 
   return (
