@@ -5,6 +5,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Auth>
+      <h1>Applicant</h1>
       <Component {...pageProps} />
     </Auth>
   );
