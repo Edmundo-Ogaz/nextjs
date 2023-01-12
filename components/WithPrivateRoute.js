@@ -6,8 +6,9 @@ export default function WithPrivateRoute({ children }) {
   const [auth, setAuth] = useState(false);
 
   useEffect(() => {
-    const user = localStorage.getItem('user')
-    if(user) {
+    const cookies = document.cookie;
+    const aCookies = cookies.split(';')
+    if(aCookies.indexOf('user=true') == 0) {
       setAuth(true)
     } else {
       router.push('/login');

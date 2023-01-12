@@ -14,8 +14,8 @@ export default function Login() {
     const { data } = await axios
 			.get(process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API)
     console.log("data", data)
-    //localStorage.setItem('user', true)
-    //window.location = '/';
+    document.cookie = "user=true";
+    window.location = '/';
 	};
 
   return (
