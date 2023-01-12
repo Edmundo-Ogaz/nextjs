@@ -1,4 +1,4 @@
-.user {
+/* .user {
   width: 400px;
   height: auto;
   display: flex;
@@ -11,6 +11,12 @@
   overflow: hidden;
   padding-top: 10px;
   padding-bottom: 10px;
+} */
+
+.user .user__form {
+    display: grid;
+    /* grid-template-columns: repeat(2, calc(100%/2)); */
+    grid-template-rows: repeat(2, auto);
 }
 
 .user .user__label {
@@ -19,6 +25,8 @@
 
 .user .user__label-text {
   padding: 0 15px;
+  display: inline-block;
+  width: 9rem;
 }
 
 .user .user__input {

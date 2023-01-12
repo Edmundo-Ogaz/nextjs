@@ -28,52 +28,78 @@ export default function CreateUser() {
         openAnimation="slide-up"
       />
       <div className={styles.user}>
-        <div className={styles.user__title}>
-          Crear Usuario
-        </div>
-        <label forhtml="rut" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Rut</span>
-          <input type="text" id="rut" className={styles.user__input} onChange={ setRut } />
-        </label>
-        <label forhtml="firt_name" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Nombres</span>
-          <input type="test" id="firt_name" className={styles.user__input} onChange={ setFirtName } />
-        </label>
-        <label forhtml="last_name" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Apellidos</span>
-          <input type="text" id="last_name" className={styles.user__input} onChange={ setLastName } />
-        </label>
-        <label forhtml="email" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Email</span>
-          <input type="text" id="email" className={styles.user__input} onChange={ setEmail } />
-        </label>
-        <label forhtml="password" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Password</span>
-          <input type="text" id="password" className={styles.user__input} onChange={ setPassword } />
-        </label>
-        <label forhtml="repassword" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Repita password</span>
-          <input type="text" id="repassword" className={styles.user__input} onChange={ setRepassword } />
-        </label>
-        <label forhtml="company" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Empresa</span>
-          <select name="company" id="company" className={styles.user__input} onSelect={ setCompany}>
-            <option value="">Selecionar...</option>
-            <option value="saab">wrwer</option>
-            <option value="mercedes">sdfdsfds</option>
-            <option value="audi">vxvxcc</option>
-          </select>
-        </label>
-        <label forhtml="position" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Cargo</span>
-          <input type="text" id="position" className={styles.user__input} onChange={ setPosition } />
-        </label>
-        <label forhtml="permission" className={styles.user__label}>
-          <span className={styles['user__label-text']}>Permisos</span>
-          <input type="text" id="permission" className={styles.user__input} onChange={ setPermission } />
-        </label>
-        <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
-          {saving ? 'Saving...' : 'Save'}
+        <h2>
+        Crear Usuario
+        </h2>
+        <div className={styles.user__form}>
+          <label forhtml="rut" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Rut</span>
+            <input type="text" id="rut" className={styles.user__input} onChange={ setRut } />
+          </label>
+          <label forhtml="firt_name" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Nombres</span>
+            <input type="test" id="firt_name" size="50" className={styles.user__input} onChange={ setFirtName } />
+          </label>
+          <label forhtml="last_name" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Apellidos</span>
+            <input type="text" id="last_name" size="50" className={styles.user__input} onChange={ setLastName } />
+          </label>
+          <label forhtml="email" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Email</span>
+            <input type="text" id="email" size="30"className={styles.user__input} onChange={ setEmail } />
+          </label>
+          <label forhtml="password" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Password</span>
+            <input type="text" id="password" className={styles.user__input} onChange={ setPassword } />
+          </label>
+          <label forhtml="repassword" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Repita password</span>
+            <input type="text" id="repassword" className={styles.user__input} onChange={ setRepassword } />
+          </label>
+          <label forhtml="company" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Empresa</span>
+            <select name="company" id="company" className={styles.user__input} onSelect={ setCompany}>
+              <option value="">Selecionar...</option>
+              <option value="saab">wrwer</option>
+              <option value="mercedes">sdfdsfds</option>
+              <option value="audi">vxvxcc</option>
+            </select>
+          </label>
+          <label forhtml="position" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Cargo</span>
+            <select name="position" id="position" className={styles.user__input} onSelect={ setPosition}>
+              <option value="">Selecionar...</option>
+              <option value="saab">wrwer</option>
+              <option value="mercedes">sdfdsfds</option>
+              <option value="audi">vxvxcc</option>
+            </select>
+          </label>
+          {/* <label forhtml="permission" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Permisos</span>
+            <input type="text" id="permission" className={styles.user__input} onChange={ setPermission } /> */}
+            
+            <label for="permission1" className={styles.user__label}>
+              <span className={styles['user__label-text']}>
+                <input type="checkbox" id="permission1" name="permission1" value="Bike" />
+                Home
+              </span>
+            </label>
+            <label for="permission2" className={styles.user__label}>
+              <span className={styles['user__label-text']}>
+                <input type="checkbox" id="permission2" name="permission2" value="Car" />
+                Crear Usuario
+              </span>
+            </label>
+            <label for="permission3">
+              <span className={styles['user__label-text']}>
+                <input type="checkbox" id="permission3" name="permission3" value="Boat"/>
+                Crear Test Usuario
+              </span>
+            </label>
+          {/* </label> */}
+          <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
+            {saving ? 'Saving...' : 'Save'}
+          </div>
         </div>
       </div>
     </>
