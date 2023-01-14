@@ -3,7 +3,7 @@ import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import styles from './user.module.css';
 import Menu from '../../components/menu/menu';
 
-export default function CreateUser() {
+export default function CreateUser({companies, permissions}) {
 	console.log('CreateUser')
 
   const [ saving, setSaving ] = useState();
@@ -60,37 +60,33 @@ export default function CreateUser() {
             <span className={styles['user__label-text']}>Empresa</span>
             <select name="company" id="company" className={styles.user__input} onSelect={ setCompany}>
               <option value="">Selecionar...</option>
-              <option value="saab">wrwer</option>
-              <option value="mercedes">sdfdsfds</option>
-              <option value="audi">vxvxcc</option>
+              {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
             </select>
           </label>
           <label forhtml="position" className={styles.user__label}>
             <span className={styles['user__label-text']}>Cargo</span>
             <select name="position" id="position" className={styles.user__input} onSelect={ setPosition}>
               <option value="">Selecionar...</option>
-              <option value="saab">wrwer</option>
-              <option value="mercedes">sdfdsfds</option>
-              <option value="audi">vxvxcc</option>
+              {permissions.map((permission) => <option key={permission.id} value={permission.id}>{permission.name}</option>)}
             </select>
           </label>
           {/* <label forhtml="permission" className={styles.user__label}>
             <span className={styles['user__label-text']}>Permisos</span>
             <input type="text" id="permission" className={styles.user__input} onChange={ setPermission } /> */}
             
-            <label for="permission1" className={styles.user__label}>
+            <label forhtml="permission1" className={styles.user__label}>
               <span className={styles['user__label-text']}>
                 <input type="checkbox" id="permission1" name="permission1" value="Bike" />
                 Home
               </span>
             </label>
-            <label for="permission2" className={styles.user__label}>
+            <label forhtml="permission2" className={styles.user__label}>
               <span className={styles['user__label-text']}>
                 <input type="checkbox" id="permission2" name="permission2" value="Car" />
                 Crear Usuario
               </span>
             </label>
-            <label for="permission3">
+            <label forhtml="permission3">
               <span className={styles['user__label-text']}>
                 <input type="checkbox" id="permission3" name="permission3" value="Boat"/>
                 Crear Test Usuario
@@ -107,3 +103,22 @@ export default function CreateUser() {
 }
 
 CreateUser.Auth = WithPrivateRoute
+
+export async function getStaticProps() {
+  try {
+    const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/company`).then(companies => companies.json())
+    const permissions = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/permission`).then(permissions => permissions.json())
+    let data = await Promise.all([companies, permissions]);
+    return {
+      props: {
+        companies: data[0],
+        permissions: data[1],
+      },
+    }
+  } catch(e) {
+    console.log(e.message)
+    return {
+      props: {},
+    }
+  }
+}

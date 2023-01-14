@@ -9,15 +9,19 @@ export default function Login() {
 	const [ password, setPassword ] = useState();
 	const [ error, setError ] = useState();
 
-  const handleLogin = async() => {
+  const handleLogin = async () => {
     try {
-      const { data } = await fetch(
+      const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/user/login`, 
         {
           method: 'POST',
           body: JSON.stringify({email: username, password})
         }
       )
+      if (!response.ok) {
+        throw new Error(`An error has occured: ${response.status}`);
+      }
+      const data = await response.json();
       document.cookie = "user=true";
       window.location = '/';
     } catch(e) {
@@ -41,6 +45,7 @@ export default function Login() {
       </div>
       <input type="text" label="name" id="name" style={ {margin: '15px auto'} } onChange={ handleUsername } />
       <input type="password" label="password" id="password" style={ {margin: '15px auto'} } onChange={ handlePassword } />
+      {error && <><small style={ { color: 'red' } }>{error}</small></>}
       <div className={styles['login-button']} onClick={ handleLogin } disabled={ loading }>
         {loading ? 'Loading...' : 'Log in'}
       </div>
