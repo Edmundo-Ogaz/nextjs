@@ -3,7 +3,7 @@ import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import styles from './user.module.css';
 import Menu from '../../components/menu/menu';
 
-export default function CreateUser({companies, permissions}) {
+export default function CreateUser({companies, profiles}) {
 	console.log('CreateUser')
 
   const [ saving, setSaving ] = useState();
@@ -11,15 +11,54 @@ export default function CreateUser({companies, permissions}) {
   const [ firtName, setFirtName ] = useState();
   const [ lastName, setLastName ] = useState();
   const [ email, setEmail ] = useState();
-  const [ password, setPassword ] = useState();
-  const [ repassword, setRepassword ] = useState();
   const [ company, setCompany ] = useState();
-  const [ position, setPosition ] = useState();
-  const [ permission, setPermission ] = useState();
+  const [ profile, setProfile ] = useState();
+  const [ error, setError ] = useState();
 
-  const handleSave = () => {
-    console.log()
+  const handleSave = async () => {
+    console.log('handleSave')
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/user`,
+        {
+          method: 'POST',
+          body: JSON.stringify({rut, firtName, lastName, email, companyId: company, permissionId: profile}),
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        .then(user => user.json())
+        console.log('Saved', response)
+      return
+    } catch(e) {
+      console.error(e.message)
+      setError(e.message)
+    }
   }
+
+  function handleRut(event) {
+		setRut(event.target.value)
+	}
+
+  function handleFirtName(event) {
+		setFirtName(event.target.value)
+	}
+
+  function handleLastName(event) {
+		setLastName(event.target.value)
+	}
+
+  function handleEmail(event) {
+		setEmail(event.target.value)
+	}
+
+  function handleCompany(event) {
+		setCompany(event.target.value)
+	}
+
+  function handleProfile(event) {
+		setProfile(event.target.value)
+	}
      
   return (
     <>
@@ -34,72 +73,42 @@ export default function CreateUser({companies, permissions}) {
         <div className={styles.user__form}>
           <label forhtml="rut" className={styles.user__label}>
             <span className={styles['user__label-text']}>Rut</span>
-            <input type="text" id="rut" className={styles.user__input} onChange={ setRut } />
+            <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
           </label>
           <label forhtml="firt_name" className={styles.user__label}>
             <span className={styles['user__label-text']}>Nombres</span>
-            <input type="test" id="firt_name" size="50" className={styles.user__input} onChange={ setFirtName } />
+            <input type="test" id="firt_name" size="50" className={styles.user__input} onChange={ handleFirtName } />
           </label>
           <label forhtml="last_name" className={styles.user__label}>
             <span className={styles['user__label-text']}>Apellidos</span>
-            <input type="text" id="last_name" size="50" className={styles.user__input} onChange={ setLastName } />
+            <input type="text" id="last_name" size="50" className={styles.user__input} onChange={ handleLastName } />
           </label>
           <label forhtml="email" className={styles.user__label}>
             <span className={styles['user__label-text']}>Email</span>
-            <input type="text" id="email" size="30"className={styles.user__input} onChange={ setEmail } />
-          </label>
-          <label forhtml="password" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Password</span>
-            <input type="text" id="password" className={styles.user__input} onChange={ setPassword } />
-          </label>
-          <label forhtml="repassword" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Repita password</span>
-            <input type="text" id="repassword" className={styles.user__input} onChange={ setRepassword } />
+            <input type="text" id="email" size="30"className={styles.user__input} onChange={ handleEmail } />
           </label>
           <label forhtml="company" className={styles.user__label}>
             <span className={styles['user__label-text']}>Empresa</span>
-            <select name="company" id="company" className={styles.user__input} onSelect={ setCompany}>
+            <select name="company" id="company" className={styles.user__input} onChange={ handleCompany}>
               <option value="">Selecionar...</option>
               {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
             </select>
           </label>
-          <label forhtml="position" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Cargo</span>
-            <select name="position" id="position" className={styles.user__input} onSelect={ setPosition}>
+          <label forhtml="profile" className={styles.user__label}>
+            <span className={styles['user__label-text']}>Perfil</span>
+            <select name="profile" id="profile" className={styles.user__input} onChange={ handleProfile}>
               <option value="">Selecionar...</option>
-              {permissions.map((permission) => <option key={permission.id} value={permission.id}>{permission.name}</option>)}
+              {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
             </select>
           </label>
-          {/* <label forhtml="permission" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Permisos</span>
-            <input type="text" id="permission" className={styles.user__input} onChange={ setPermission } /> */}
-            
-            <label forhtml="permission1" className={styles.user__label}>
-              <span className={styles['user__label-text']}>
-                <input type="checkbox" id="permission1" name="permission1" value="Bike" />
-                Home
-              </span>
-            </label>
-            <label forhtml="permission2" className={styles.user__label}>
-              <span className={styles['user__label-text']}>
-                <input type="checkbox" id="permission2" name="permission2" value="Car" />
-                Crear Usuario
-              </span>
-            </label>
-            <label forhtml="permission3">
-              <span className={styles['user__label-text']}>
-                <input type="checkbox" id="permission3" name="permission3" value="Boat"/>
-                Crear Test Usuario
-              </span>
-            </label>
-          {/* </label> */}
+          {error && <><small style={ { color: 'red' } }>{error}</small></>}
           <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
             {saving ? 'Saving...' : 'Save'}
           </div>
         </div>
       </div>
     </>
-    );
+  );
 }
 
 CreateUser.Auth = WithPrivateRoute
@@ -112,7 +121,7 @@ export async function getStaticProps() {
     return {
       props: {
         companies: data[0],
-        permissions: data[1],
+        profiles: data[1],
       },
     }
   } catch(e) {

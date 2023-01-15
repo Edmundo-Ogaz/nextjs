@@ -9,25 +9,23 @@ export default function Login() {
 	const [ password, setPassword ] = useState();
 	const [ error, setError ] = useState();
 
-  const handleLogin = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/user/login`, 
-        {
-          method: 'POST',
-          body: JSON.stringify({email: username, password})
-        }
-      )
-      if (!response.ok) {
-        throw new Error(`An error has occured: ${response.status}`);
+  const handleLogin = () => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/user/login`, 
+      {
+        method: 'POST',
+        body: JSON.stringify({email: username, password}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
       }
-      const data = await response.json();
+    )
+    .then(response => response.json())
+    .then((data) => {
+      console.log(data)
       document.cookie = "user=true";
       window.location = '/';
-    } catch(e) {
-      console.log(e.message)
-      setError(e.message)
-    }
+    })
 	};
 
   function handleUsername(event) {
