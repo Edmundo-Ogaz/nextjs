@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styles from './login.module.css';
-import axios from 'axios';
 
 export default function Login() {
 	console.log('Login')
@@ -11,7 +10,7 @@ export default function Login() {
 
   const handleLogin = () => {
     fetch(
-      `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/user/login`, 
+      `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users/login`, 
       {
         method: 'POST',
         body: JSON.stringify({email: username, password}),
@@ -23,9 +22,14 @@ export default function Login() {
     .then(response => response.json())
     .then((data) => {
       console.log(data)
-      document.cookie = "user=true";
+      localStorage.setItem('user', JSON.stringify(data))
+      document.cookie = 'user=true;';
       window.location = '/';
     })
+    .catch(e => {
+      console.error(e)
+      setError(e.message)
+    }) 
 	};
 
   function handleUsername(event) {

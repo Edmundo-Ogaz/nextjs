@@ -1,3 +1,4 @@
+import Avatar from '../components/avatar';
 const Noop = ({ children }) => <>{children}</>;
 
 function MyApp({ Component, pageProps }) {
@@ -6,6 +7,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Auth>
       <h1>Applicant</h1>
+      <Avatar/>
       <Component {...pageProps} />
     </Auth>
   );

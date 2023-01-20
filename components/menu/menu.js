@@ -1,6 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-// import { useNavigate } from 'react-router-dom';
 import { useRouter } from 'next/router';
 
 import Menu, { SubMenu, Item as MenuItem } from 'rc-menu';
@@ -8,29 +6,30 @@ import 'rc-menu/assets/index.css';
 //import './menu.css';
 //import styles from './menu.module.css';
 
-//import { removeSession } from '../../services/sessionStorage'
-
 export default function App( props ) {
 	console.log('App')
 
   const router = useRouter();
   
-  //const navigate = useNavigate();
 
   function handleClick(info) {
-    // console.log(`clicked ${info.key}`);
-    // console.log(info);
-    // console.log(info.item.props.children)
  
     switch (info.key) {
       case '1':
         router.push('/');
         break;
-      case '2-2':
+      case '3-3':
+        router.push('/test/assign');
+        break;
+      case '4-1':
         router.push('/user/create-user');
         break;
       case '4-2':
+        router.push('/postulant/create');
+        break;
+      case '5-2':
         document.cookie = 'user' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        localStorage.clear('user')
         router.push('/login');
         break;
     
@@ -53,21 +52,18 @@ export default function App( props ) {
       defaultOpenKeys={ props.defaultOpenKeys }
     >
       <MenuItem key="1">Home</MenuItem>
-      <SubMenu
-            title={
-              <span className="submenu-title-wrapper">Crear usuario</span>
-            }
-            key="2"
-            popupOffset={ [ 10, 15 ] }
-        >
-        <MenuItem key="2-2">Crear Usuario</MenuItem>
-      </SubMenu>
+      <MenuItem key="2">Resultados</MenuItem>
       <SubMenu title={ <span className="submenu-title-wrapper">Pruebas</span> } key="3">
-        <MenuItem key="3-1">Test</MenuItem>
+      <MenuItem key="3-1">IC</MenuItem>
+      <MenuItem key="3-2">DISC</MenuItem>
+      <MenuItem key="3-3">Asignar prueba</MenuItem>
       </SubMenu>
-      <SubMenu title={ <span className="submenu-title-wrapper">Salir</span> } key="4">
-        <MenuItem key="4-1">Cambiar Usuario</MenuItem>
-        <MenuItem key="4-2">Salida del Sistema</MenuItem>
+      <SubMenu title={ <span className="submenu-title-wrapper">Administración</span> } key="4">
+        <MenuItem key="4-1">Crear Usuario</MenuItem>
+        <MenuItem key="4-2">Crear Postulante</MenuItem>
+      </SubMenu>
+      <SubMenu title={ <span className="submenu-title-wrapper">Salir</span> } key="5">
+        <MenuItem key="5-2">Salida del Sistema</MenuItem>
       </SubMenu>
     </Menu>
   );

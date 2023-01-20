@@ -3,16 +3,15 @@ import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import styles from './user.module.css';
 import Menu from '../../components/menu/menu';
 
-export default function CreateUser({companies, profiles}) {
-	console.log('CreateUser')
+export default function CreatePostulant() {
+	console.log('CreatePostulant')
 
   const [ saving, setSaving ] = useState();
+
   const [ rut, setRut ] = useState();
   const [ firstName, setFirstName ] = useState();
   const [ lastName, setLastName ] = useState();
   const [ email, setEmail ] = useState();
-  const [ company, setCompany ] = useState();
-  const [ profile, setProfile ] = useState();
 
   const [ message, setMessage ] = useState();
   const [ error, setError ] = useState();
@@ -21,18 +20,18 @@ export default function CreateUser({companies, profiles}) {
     console.log('handleSave')
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users`,
+        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/postulants`,
         {
           method: 'POST',
-          body: JSON.stringify({rut, firstName, lastName, email, companyId: company, profileId: profile}),
+          body: JSON.stringify({rut, firstName, lastName, email}),
           headers: {
             'Content-Type': 'application/json'
           },
-        })
-        .then(user => user.json())
-        console.log('Saved', response)
-        setMessage('Saved')
-      return
+        }
+      )
+      .then(postulant => postulant.json())
+      console.log('Saved', response)
+      setMessage('Saved')
     } catch(e) {
       console.error(e.message)
       setError(e.message)
@@ -54,14 +53,6 @@ export default function CreateUser({companies, profiles}) {
   function handleEmail(event) {
 		setEmail(event.target.value)
 	}
-
-  function handleCompany(event) {
-		setCompany(event.target.value)
-	}
-
-  function handleProfile(event) {
-		setProfile(event.target.value)
-	}
      
   return (
     <>
@@ -71,7 +62,7 @@ export default function CreateUser({companies, profiles}) {
       />
       <div className={styles.user}>
         <h2>
-        Crear Usuario
+        Crear Postulante
         </h2>
         <div className={styles.user__form}>
           <label forhtml="rut" className={styles.user__label}>
@@ -90,21 +81,7 @@ export default function CreateUser({companies, profiles}) {
             <span className={styles['user__label-text']}>Email</span>
             <input type="text" id="email" size="30"className={styles.user__input} onChange={ handleEmail } />
           </label>
-          <label forhtml="company" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Empresa</span>
-            <select name="company" id="company" className={styles.user__input} onChange={ handleCompany}>
-              <option value="">Selecionar...</option>
-              {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-            </select>
-          </label>
-          <label forhtml="profile" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Perfil</span>
-            <select name="profile" id="profile" className={styles.user__input} onChange={ handleProfile}>
-              <option value="">Selecionar...</option>
-              {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
-            </select>
-          </label>
-          {message && <><small style={ { color: 'green' } }>{message}</small></>}
+          {message && <><small style={ { color: 'gren' } }>{message}</small></>}
           {error && <><small style={ { color: 'red' } }>{error}</small></>}
           <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
             {saving ? 'Saving...' : 'Save'}
@@ -115,23 +92,4 @@ export default function CreateUser({companies, profiles}) {
   );
 }
 
-CreateUser.Auth = WithPrivateRoute
-
-export async function getStaticProps() {
-  try {
-    const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
-    const profiles = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/profiles`).then(profiles => profiles.json())
-    let data = await Promise.all([companies, profiles]);
-    return {
-      props: {
-        companies: data[0],
-        profiles: data[1],
-      },
-    }
-  } catch(e) {
-    console.log(e.message)
-    return {
-      props: {},
-    }
-  }
-}
+CreatePostulant.Auth = WithPrivateRoute
