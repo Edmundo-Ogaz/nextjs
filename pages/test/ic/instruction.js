@@ -71,16 +71,4 @@ export async function getServerSideProps({query}) {
       props:{},
     };
   }
-
-  
-
-
-
-  
-  return { 
-    props: { 
-      postulantId: query.postulant, 
-      companyId: query.company
-    } 
-  }
 }

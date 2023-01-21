@@ -137,16 +137,43 @@ export default function Certificate({user, date, score, level, correct, wrong, o
   );
 }
 
-export async function getServerSideProps() {
-  return { 
-    props: { 
-      user: 'Tester 1', 
-      date: 'Jan. 19, 2023, 9:52 p.m.',
-      score: '1', 
-      level: 'Nivel Bajo',
-      correct: '0', 
-      wrong: '19', 
-      omitted: '19'
-    } 
+export async function getServerSideProps({params}) {
+  try {
+    const id = params.id
+    if (isNaN(id)) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/error",
+        },
+        props:{},
+      };
+    }
+    console.log('getServerSideProps');
+    const URL = `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/ic/${id}`
+    console.log('getServerSideProps', URL);
+    const testPortulant = await fetch(URL)
+    .then(testPortulant => testPortulant.json())
+    console.log('getServerSideProps', testPortulant);
+    return { 
+      props: { 
+        user: 'Tester 1', 
+        date: 'Jan. 19, 2023, 9:52 p.m.',
+        score: '1', 
+        level: 'Nivel Bajo',
+        correct: '0', 
+        wrong: '19', 
+        omitted: '19'
+      } 
+    }
+  } catch(e) {
+    console.log(e.message)
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/error",
+      },
+      props:{},
+    };
   }
 }
