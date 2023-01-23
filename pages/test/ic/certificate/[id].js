@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-export default function Certificate({user, date, score, level, correct, wrong, omitted}) {
+export default function Certificate({ test, postulant, answer, date, state }) {
 	console.log('Certificate')
 
   return (
@@ -29,18 +29,18 @@ export default function Certificate({user, date, score, level, correct, wrong, o
                 <div className="full_container full_center">
                     <div className="info_col vertical">
                         <ul className="data">
-                            <li>Nombre: {user} </li>
-                            <li>RUN: 00.000.000-0</li>
-                            <li>Edad: 00</li>
-                            <li>Sexo: N/I</li>
+                            <li>Nombre: {postulant.firstName} {postulant.lastName}</li>
+                            <li>RUN: {postulant.rut}</li>
+                            <li>Edad: {postulant.age}</li>
+                            <li>Sexo: {postulant.sexo}</li>
                             <li>Ciudad: P/D</li>
                         </ul>
                     </div>
                     <div className="info_col vertical">
                         <ul className="data">
-                            <li>Rendido: {date} </li>
+                            <li>Rendido: {date['@ts']} </li>
                             <li>Válido hasta: P/D</li>
-                            <li>Estado: --- </li>
+                            <li>Estado: {state.name} </li>
                             <li>Lugar de rendición: Online</li>
                             <li>Cod: --- </li>
                         </ul>
@@ -53,10 +53,10 @@ export default function Certificate({user, date, score, level, correct, wrong, o
             <div className="pseudo-mid-floater">
                 <div id="puntaje" >
                     <div className="bignum" style={{textAlign: 'center'}}>
-                        {score}
+                        {answer.score}
                     </div>
                     <div style={{textAlign: 'center'}}>
-                        {level}
+                        {answer.level}
                     </div>
                 </div>
                 <div>
@@ -64,15 +64,15 @@ export default function Certificate({user, date, score, level, correct, wrong, o
                   <tbody>
                     <tr>
                         <td className="middle">Buenas</td>
-                        <td> {correct} </td>
+                        <td> {answer.correct} </td>
                     </tr>
                     <tr>
                         <td className="middle">Malas</td>
-                        <td> {wrong} </td>
+                        <td> {answer.wrong} </td>
                     </tr>
                     <tr>
                         <td className="middle">Omitidas</td>
-                        <td> {omitted} </td>
+                        <td> {answer.omitted} </td>
                     </tr>
                   </tbody>
                 </table>
@@ -155,17 +155,10 @@ export async function getServerSideProps({params}) {
     const testPortulant = await fetch(URL)
     .then(testPortulant => testPortulant.json())
     console.log('getServerSideProps', testPortulant);
+    const { test, postulant, answer, date, state} = {...testPortulant}
     return { 
-      props: { 
-        user: 'Tester 1', 
-        date: 'Jan. 19, 2023, 9:52 p.m.',
-        score: '1', 
-        level: 'Nivel Bajo',
-        correct: '0', 
-        wrong: '19', 
-        omitted: '19'
-      } 
-    }
+      props: { test, postulant, answer, date, state }
+    } 
   } catch(e) {
     console.log(e.message)
     return {

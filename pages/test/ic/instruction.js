@@ -1,31 +1,39 @@
+import Head from "next/head";
 import Link from 'next/link'
 
-import styles from './instruction.module.css';
-
-export default function Instruction({postulantId, companyId}) {
-	console.log('Instruction')
+export default function Instruction2({postulantId, companyId}) {
+	console.log('Instruction2')
 
   return (
-      <div className={styles.instruction}>
-        <h1 className={styles.instruction__title}>TEST IC</h1>
-        <p className={styles['instruction__indication-1']}>Evaluación de la aptitud para comprender e interpretar rápida y correctamente órdenes complejas.</p>
-        <hr></hr>
-        <p>Tienes 8 minutos para completar el test. Si te sales de la página, perderás tus respuestas. Es TÚ responsabilidad realizarlo de forma sensata. Buena suerte!</p>
-        <a 
-          className={[styles.instruction__button, styles['instruction__button--lg'], styles['instruction__button--warning']].join(" ")} 
-          role="button">Ir a la prueba
-          </a>
+    <>
+    <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link 
+          rel="stylesheet" 
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+          crossOrigin="anonymous"
+        />
+      </Head>
+      <div class="container-fluid">
+        <div className="jumbotron w-75" style={{margin: 'auto'}}>
+          <h1 className="display-4">TEST IC</h1>
+          <p className="lead">Evaluación de la aptitud para comprender e interpretar rápida y correctamente órdenes complejas.</p>
+          <hr className="my-4"/>
+          <p>Tienes 8 minutos para completar el test. Si te sales de la página, perderás tus respuestas. Es TÚ responsabilidad realizarlo de forma sensata. Buena suerte!</p>
           <Link
-          href={{
-            pathname: '/test/ic',
-            query: { postulant: postulantId, company: companyId },
-          }}
-          role="button"
-          className={[styles.instruction__button, styles['instruction__button--lg'], styles['instruction__button--warning']].join(" ")} 
-        >
-          Ir a la prueba
-        </Link>
+            href={{
+              pathname: '/test/ic/ic',
+              query: { postulant: postulantId, company: companyId },
+            }}
+            role="button"
+            className="btn btn-warning btn-lg" 
+          >
+            Ir a la prueba
+          </Link>
+        </div>
       </div>
+    </>
   );
 }
 

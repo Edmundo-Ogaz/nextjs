@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
+
+import Layout from "../../components/layout2";
+
 import styles from './user.module.css';
-import Menu from '../../components/menu/menu';
+
 import { getUser } from '../../utils/LocalStorageService'
 
 export default function CreateTestUser({companies, tests}) {
@@ -123,52 +127,50 @@ export default function CreateTestUser({companies, tests}) {
      
   return (
     <>
-      <Menu
-        mode="horizontal"
-        openAnimation="slide-up"
-      />
-      <div className={styles.user}>
-        <h2>
-        Asignar Test a Postulante
-        </h2>
-        <div className={styles.user__form}>
-          <label forhtml="rut" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Rut</span>
-            <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
-          </label>
-          <div className={styles['user__button']} onClick={ handleSearch } disabled={ searching }>
-            {searching ? 'Searching...' : 'Search'}
-          </div>
-          <p>Nombre: {firstName} {lastName}</p>
-          <p>Email: {email}</p>
-          <label forhtml="test" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Test</span>
-            <select name="test" id="test" className={styles.user__input} onChange={ handleTest}>
-              <option value="">Selecionar...</option>
-              {tests.map((test) => <option key={test.id} value={test.id}>{test.name}</option>)}
-            </select>
-          </label>
-          <label forhtml="company" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Empresa</span>
-            <select name="company" id="company" className={styles.user__input} onChange={ handleCompany}>
-              <option value="">Selecionar...</option>
-              {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-            </select>
-          </label>
-          <label forhtml="analyst" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Analista</span>
-            <select name="analyst" id="analyst" className={styles.user__input} onChange={ handleAnalyst}>
-              <option value="">Selecionar...</option>
-              {analysts.map((analyst) => <option key={analyst.id} value={analyst.id}>{analyst.firstName} {analyst.lastName}</option>)}
-            </select>
-          </label>
-          {message && <><small style={ { color: 'green' } }>{message}</small></>}
-          {error && <><small style={ { color: 'red' } }>{error}</small></>}
-          <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
-            {saving ? 'Saving...' : 'Save'}
+      <Layout>
+        <div className={styles.user}>
+          <h2>
+          Asignar Test a Postulante
+          </h2>
+          <div className={styles.user__form}>
+            <label forhtml="rut" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Rut</span>
+              <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
+            </label>
+            <div className={styles['user__button']} onClick={ handleSearch } disabled={ searching }>
+              {searching ? 'Searching...' : 'Search'}
+            </div>
+            <p>Nombre: {firstName} {lastName}</p>
+            <p>Email: {email}</p>
+            <label forhtml="test" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Test</span>
+              <select name="test" id="test" className={styles.user__input} onChange={ handleTest}>
+                <option value="">Selecionar...</option>
+                {tests.map((test) => <option key={test.id} value={test.id}>{test.name}</option>)}
+              </select>
+            </label>
+            <label forhtml="company" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Empresa</span>
+              <select name="company" id="company" className={styles.user__input} onChange={ handleCompany}>
+                <option value="">Selecionar...</option>
+                {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+              </select>
+            </label>
+            <label forhtml="analyst" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Analista</span>
+              <select name="analyst" id="analyst" className={styles.user__input} onChange={ handleAnalyst}>
+                <option value="">Selecionar...</option>
+                {analysts.map((analyst) => <option key={analyst.id} value={analyst.id}>{analyst.firstName} {analyst.lastName}</option>)}
+              </select>
+            </label>
+            {message && <><small style={ { color: 'green' } }>{message}</small></>}
+            {error && <><small style={ { color: 'red' } }>{error}</small></>}
+            <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
+              {saving ? 'Saving...' : 'Save'}
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import styles from './user.module.css';
-import Menu from '../../components/menu/menu';
+import Layout from '../../components/layout2.js';
 
 export default function CreateUser({companies, profiles}) {
 	console.log('CreateUser')
@@ -65,52 +65,50 @@ export default function CreateUser({companies, profiles}) {
      
   return (
     <>
-      <Menu
-        mode="horizontal"
-        openAnimation="slide-up"
-      />
-      <div className={styles.user}>
-        <h2>
-        Crear Usuario
-        </h2>
-        <div className={styles.user__form}>
-          <label forhtml="rut" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Rut</span>
-            <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
-          </label>
-          <label forhtml="firt_name" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Nombres</span>
-            <input type="test" id="firt_name" size="50" className={styles.user__input} onChange={ handleFirstName } />
-          </label>
-          <label forhtml="last_name" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Apellidos</span>
-            <input type="text" id="last_name" size="50" className={styles.user__input} onChange={ handleLastName } />
-          </label>
-          <label forhtml="email" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Email</span>
-            <input type="text" id="email" size="30"className={styles.user__input} onChange={ handleEmail } />
-          </label>
-          <label forhtml="company" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Empresa</span>
-            <select name="company" id="company" className={styles.user__input} onChange={ handleCompany}>
-              <option value="">Selecionar...</option>
-              {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
-            </select>
-          </label>
-          <label forhtml="profile" className={styles.user__label}>
-            <span className={styles['user__label-text']}>Perfil</span>
-            <select name="profile" id="profile" className={styles.user__input} onChange={ handleProfile}>
-              <option value="">Selecionar...</option>
-              {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
-            </select>
-          </label>
-          {message && <><small style={ { color: 'green' } }>{message}</small></>}
-          {error && <><small style={ { color: 'red' } }>{error}</small></>}
-          <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
-            {saving ? 'Saving...' : 'Save'}
+      <Layout>
+        <div className={styles.user}>
+          <h2>
+          Crear Usuario
+          </h2>
+          <div className={styles.user__form}>
+            <label forhtml="rut" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Rut</span>
+              <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
+            </label>
+            <label forhtml="firt_name" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Nombres</span>
+              <input type="test" id="firt_name" size="50" className={styles.user__input} onChange={ handleFirstName } />
+            </label>
+            <label forhtml="last_name" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Apellidos</span>
+              <input type="text" id="last_name" size="50" className={styles.user__input} onChange={ handleLastName } />
+            </label>
+            <label forhtml="email" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Email</span>
+              <input type="text" id="email" size="30"className={styles.user__input} onChange={ handleEmail } />
+            </label>
+            <label forhtml="company" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Empresa</span>
+              <select name="company" id="company" className={styles.user__input} onChange={ handleCompany}>
+                <option value="">Selecionar...</option>
+                {companies.map((company) => <option key={company.id} value={company.id}>{company.name}</option>)}
+              </select>
+            </label>
+            <label forhtml="profile" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Perfil</span>
+              <select name="profile" id="profile" className={styles.user__input} onChange={ handleProfile}>
+                <option value="">Selecionar...</option>
+                {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
+              </select>
+            </label>
+            {message && <><small style={ { color: 'green' } }>{message}</small></>}
+            {error && <><small style={ { color: 'red' } }>{error}</small></>}
+            <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
+              {saving ? 'Saving...' : 'Save'}
+            </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }

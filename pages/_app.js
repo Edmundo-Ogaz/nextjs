@@ -6,8 +6,10 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <Auth>
-      <h1>Applicant</h1>
-      <Avatar/>
+      <header style={{display: 'flex', justifyContent: 'space-between'}}>
+        <h1>Applicant</h1>
+        <Avatar/>
+      </header>
       <Component {...pageProps} />
     </Auth>
   );
