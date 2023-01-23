@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router'
-import WithPrivateRoute from '../../components/WithPrivateRoute.js'
+
 import styles from './user.module.css';
-import Menu from '../../components/menu/menu';
 
 export default function RegisterPassword() {
 	console.log('RegisterPassword')
@@ -10,14 +9,14 @@ export default function RegisterPassword() {
   const router = useRouter()
   const { id } = router.query
 
-  const [ saving, setSaving ] = useState(false);
+  const [ isSaving, setIsSaving ] = useState(false);
   const [ password, setPassword ] = useState();
-  const [ repeatPassword, setRepeatPassword ] = useState();
   const [ isPasswordCorrect, setIsPasswordCorrect ] = useState(false);
   const [ error, setError ] = useState();
 
   const handleSave = async () => {
     console.log('handleSave')
+    setIsSaving(true)
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users/${id}/password`,
@@ -29,11 +28,12 @@ export default function RegisterPassword() {
           },
         })
         .then(user => user.json())
-        console.log('Saved', response)
-      return
+      console.log('Saved', response)
+      setIsSaving(false)
     } catch(e) {
       console.error(e.message)
       setError(e.message)
+      setIsSaving(false)
     }
   }
 
@@ -42,16 +42,11 @@ export default function RegisterPassword() {
 	}
 
   function handleRepeatPassword(event) {
-		setRepeatPassword(event.target.value)
     setIsPasswordCorrect(password === event.target.value ? true : false)
 	}
      
   return (
     <>
-      <Menu
-        mode="horizontal"
-        openAnimation="slide-up"
-      />
       <div className={styles.user}>
         <h2>
         Registrar Password
@@ -66,8 +61,8 @@ export default function RegisterPassword() {
             <input type="text" id="repeatPassword" className={styles.user__input} onChange={ handleRepeatPassword } />
           </label>
           {error && <><small style={ { color: 'red' } }>{error}</small></>}
-          <button className={styles['user__button']} onClick={ handleSave } disabled={ !isPasswordCorrect || saving }>
-            {!isPasswordCorrect || saving ? 'Saving...' : 'Save'}
+          <button className={styles['user__button']} onClick={ handleSave } disabled={ !isPasswordCorrect || isSaving }>
+            {isSaving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

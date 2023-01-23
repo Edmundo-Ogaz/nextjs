@@ -1,6 +1,3 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-
 import Menu, { SubMenu, Item as MenuItem } from 'rc-menu';
 import 'rc-menu/assets/index.css';
 
@@ -8,45 +5,6 @@ import 'rc-menu/assets/index.css';
 
 export default function App( props ) {
 	console.log('App')
-
-  const router = useRouter();
-
-  const [ isLoading, setIsLoading ] = useState()
-  
-
-  function handleClick(info) {
- 
-    switch (info.key) {
-      case '1':
-        router.push('/');
-        setLoading(true)
-        break;
-      case '2-2':
-        router.push('/test/ic/list');
-        setLoading(true)
-        break;
-      case '3-3':
-        router.push('/test/assign');
-        setLoading(true)
-        break;
-      case '4-1':
-        router.push('/user/create-user');
-        setLoading(true)
-        break;
-      case '4-2':
-        router.push('/postulant/create');
-        setLoading(true)
-        break;
-      case '5-2':
-        document.cookie = 'user' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        localStorage.clear('user')
-        router.push('/login');
-        setLoading(true)
-        break;
-      default:
-        break;
-    }
-  }
 
   function onOpenChange(value) {
     // console.log('onOpenChange', value);

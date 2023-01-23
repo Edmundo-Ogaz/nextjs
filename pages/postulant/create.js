@@ -1,7 +1,9 @@
 import { useState } from 'react';
+
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
-import styles from './user.module.css';
 import Layout from '../../components/layout2.js';
+
+import styles from './postulant.module.css';
 
 export default function CreatePostulant() {
 	console.log('CreatePostulant')

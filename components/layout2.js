@@ -26,7 +26,7 @@ export default function Layout({ children }) {
         setIsLoading(true)
         break;
       case '4-1':
-        router.push('/user/create-user');
+        router.push('/user/create');
         setIsLoading(true)
         break;
       case '4-2':
