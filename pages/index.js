@@ -1,4 +1,4 @@
-import Layout from '../components/layout2';
+import Layout from '../components/layout';
 
 import WithPrivateRoute from '../components/WithPrivateRoute.js'
 

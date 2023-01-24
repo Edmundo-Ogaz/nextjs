@@ -139,6 +139,7 @@ export default function Certificate({ test, postulant, answer, date, state }) {
 
 export async function getServerSideProps({params}) {
   try {
+    console.log('getServerSideProps');
     const id = params.id
     if (isNaN(id)) {
       return {
@@ -149,7 +150,7 @@ export async function getServerSideProps({params}) {
         props:{},
       };
     }
-    console.log('getServerSideProps');
+    
     const URL = `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/ic/${id}`
     console.log('getServerSideProps', URL);
     const testPortulant = await fetch(URL)
@@ -160,7 +161,7 @@ export async function getServerSideProps({params}) {
       props: { test, postulant, answer, date, state }
     } 
   } catch(e) {
-    console.log(e.message)
+    console.error(e.message)
     return {
       redirect: {
         permanent: false,

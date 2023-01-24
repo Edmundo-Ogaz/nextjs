@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
-import Layout from '../../components/layout2.js';
+import Layout from '../../components/layout';
 
 import styles from './postulant.module.css';
 

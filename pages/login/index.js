@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import styles from './login.module.css';
+
+import Cookie from '../../utils/Cookie';
 import LoadingSpinner from '../../components/LoadingSpinner';
+
+import styles from './login.module.css';
 
 export default function Login() {
 	console.log('Login')
@@ -22,10 +25,9 @@ export default function Login() {
       }
     )
     .then(response => response.json())
-    .then((data) => {
-      console.log(data)
-      localStorage.setItem('user', JSON.stringify(data))
-      document.cookie = 'user=true;';
+    .then((user) => {
+      console.log(user)
+      Cookie.add(user)
       window.location = '/';
     })
     .catch(e => {

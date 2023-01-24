@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
+import Cookie from '../../utils/Cookie.js';
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 
-import Layout from "../../components/layout2";
+import Layout from "../../components/layout";
 
 import styles from './user.module.css';
-
-import { getUser } from '../../utils/LocalStorageService'
 
 export default function CreateTestUser({companies, tests}) {
 	console.log('CreateTestUser')
@@ -54,18 +53,17 @@ export default function CreateTestUser({companies, tests}) {
   const handleSave = async () => {
     console.log('handleSave')
 
-    const ASSIGNER = {
+    const assigner = {
       companyId: company, 
       analystId: analyst, 
-      createdById: getUser().id
+      createdById: Cookie.getUser().id
     }
-    getUser()
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/${testId}/postulants/${postulantId}`,
         {
           method: 'POST',
-          body: JSON.stringify(ASSIGNER),
+          body: JSON.stringify(assigner),
           headers: {
             'Content-Type': 'application/json'
           },
@@ -177,8 +175,9 @@ export default function CreateTestUser({companies, tests}) {
 
 CreateTestUser.Auth = WithPrivateRoute
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
+    console.log('getServerSideProps')
     const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
     const tests = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests`).then(tests => tests.json())
     let data = await Promise.all([companies, tests]);
@@ -191,7 +190,11 @@ export async function getStaticProps() {
   } catch(e) {
     console.log(e.message)
     return {
-      props: {},
-    }
+      redirect: {
+        permanent: false,
+        destination: "/error",
+      },
+      props:{},
+    };
   }
 }

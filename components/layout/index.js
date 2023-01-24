@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
-import Menu from './menu';
-import LoadingSpinner from './LoadingSpinner';
+import Cookie from '../../utils/Cookie';
+import Menu from '../menu';
+import LoadingSpinner from '../LoadingSpinner';
 
 export default function Layout({ children }) {
 
@@ -18,6 +19,10 @@ export default function Layout({ children }) {
         setIsLoading(true)
         break;
       case '2-2':
+        router.push('/search');
+        setIsLoading(true)
+        break;
+      case '2-3':
         router.push('/test/ic/list');
         setIsLoading(true)
         break;
@@ -34,8 +39,7 @@ export default function Layout({ children }) {
         setIsLoading(true)
         break;
       case '5-2':
-        document.cookie = 'user' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        localStorage.clear('user')
+        Cookie.remove()
         router.push('/login');
         setIsLoading(true)
         break;

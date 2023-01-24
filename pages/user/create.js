@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import styles from './user.module.css';
-import Layout from '../../components/layout2.js';
+import Layout from '../../components/layout';
 
 export default function CreateUser({companies, profiles}) {
 	console.log('CreateUser')
@@ -115,8 +115,10 @@ export default function CreateUser({companies, profiles}) {
 
 CreateUser.Auth = WithPrivateRoute
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   try {
+    console.log('getServerSideProps')
+    
     const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
     const profiles = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/profiles`).then(profiles => profiles.json())
     let data = await Promise.all([companies, profiles]);
@@ -129,7 +131,11 @@ export async function getStaticProps() {
   } catch(e) {
     console.log(e.message)
     return {
-      props: {},
-    }
+      redirect: {
+        permanent: false,
+        destination: "/error",
+      },
+      props:{},
+    };
   }
 }

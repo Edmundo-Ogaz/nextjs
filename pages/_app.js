@@ -1,4 +1,6 @@
 import Avatar from '../components/avatar';
+
+import '../styles/global.css'
 const Noop = ({ children }) => <>{children}</>;
 
 function MyApp({ Component, pageProps }) {

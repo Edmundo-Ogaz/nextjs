@@ -1,17 +1,16 @@
 
 import { useState, useEffect } from "react";
 
-export default function Avatar( props ) {
+import Cookie from '../../utils/Cookie'
+
+export default function Avatar() {
 	console.log('Avatar')
 
   const [ username, setUsername ] = useState()
 
   useEffect(function onFirstMount() {
-    const user = window.localStorage.getItem('user')
-      if(user) {
-        const oUser = JSON.parse(user)
-        setUsername(oUser.email)
-      }
+    const user = Cookie.getUser()
+    setUsername(user.email)
   }, []);
 
   return (
