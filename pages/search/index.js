@@ -31,8 +31,12 @@ export default function Search({companies, tests}) {
     console.log('handleSearch')
     setIsSearching(true)
     try {
+      let query = ''
+      if (rut)
+        query = `rut=${rut}`
+      
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/search?rut=${rut}`,
+        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/search?${query}`,
         )
         .then(postulant => postulant.json())
         console.log('Searched', response)
@@ -98,11 +102,11 @@ export default function Search({companies, tests}) {
             </label>
             <label forhtml="name" className={styles.search__label}>
               <span className={styles['search__label-text']}>Nombre </span>
-              <input type="text" id="name" className={styles.search__input} onChange={ handleName } />
+              <input type="text" id="name" size="50" className={styles.search__input} onChange={ handleName } />
             </label>
             <label forhtml="email" className={styles.search__label}>
               <span className={styles['search__label-text']}>Email </span>
-              <input type="text" id="email" className={styles.search__input} onChange={ handleEmail } />
+              <input type="text" id="email" size="50" className={styles.search__input} onChange={ handleEmail } />
             </label>
 
             <label forhtml="company" className={styles.search__label}>
