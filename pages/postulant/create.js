@@ -97,7 +97,6 @@ export default function CreatePostulant() {
                 <option value="femenino">Femenino</option>
                 <option value="masculino">Masculino</option>
               </select>
-              <input type="number" id="sexo" min="1" max="100" className={styles.user__input} onChange={ handleAge } />
             </label>
             <label forhtml="email" className={styles.user__label}>
               <span className={styles['user__label-text']}>Email</span>

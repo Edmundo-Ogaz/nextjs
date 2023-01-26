@@ -7,7 +7,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/index.js';
 
 import styles from './search.module.css';
 
-export default function Search({companies, tests}) {
+export default function Search({companies, tests, states}) {
 	console.log('Search')
 
   const [ isSearching, setIsSearching ] = useState(false);
@@ -16,9 +16,10 @@ export default function Search({companies, tests}) {
   const [ name, setName ] = useState();
   const [ email, setEmail ] = useState();
 
-  const [ testId, setTestId ] = useState();
+  const [ test, setTest ] = useState();
   const [ company, setCompany ] = useState();
   const [ analyst, setAnalyst ] = useState();
+  const [ state, setState ] = useState();
 
   const [ list, setList ] = useState([]);
 
@@ -34,6 +35,21 @@ export default function Search({companies, tests}) {
       let query = ''
       if (rut)
         query = `rut=${rut}`
+
+      if (email)
+        query = `email=${email}`
+      
+      if (company)
+        query = `company=${company}`
+
+      if (analyst)
+        query = `analyst=${analyst}`
+
+      if (test)
+        query = `test=${test}`
+      
+      if (state)
+        query = `state=${state}`
       
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/search?${query}`,
@@ -81,11 +97,15 @@ export default function Search({companies, tests}) {
 	}
   
   function handleTest(event) {
-		setTestId(event.target.value)
+		setTest(event.target.value)
 	}
 
   function handleAnalyst(event) {
 		setAnalyst(event.target.value)
+	}
+
+  function handleState(event) {
+		setState(event.target.value)
 	}
      
   return (
@@ -128,6 +148,13 @@ export default function Search({companies, tests}) {
               <select name="test" id="test" className={styles.search__input} onChange={ handleTest}>
                 <option value="">Selecionar...</option>
                 {tests.map((test) => <option key={test.id} value={test.id}>{test.name}</option>)}
+              </select>
+            </label>
+            <label forhtml="state" className={styles.search__label}>
+              <span className={styles['search__label-text']}>Estado </span>
+              <select name="state" id="state" className={styles.search__input} onChange={ handleState}>
+                <option value="">Selecionar...</option>
+                {states.map((state) => <option key={state.id} value={state.id}>{state.name}</option>)}
               </select>
             </label>
 
@@ -180,13 +207,16 @@ Search.Auth = WithPrivateRoute
 export async function getServerSideProps() {
   try {
     console.log('getServerSideProps')
-    const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
-    const tests = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests`).then(tests => tests.json())
-    let data = await Promise.all([companies, tests]);
+    const companies = fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
+    const tests = fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests`).then(tests => tests.json())
+    const states = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/states`).then(states => states.json())
+    let data = await Promise.all([companies, tests, states])
+    console.log('getServerSideProps', data)
     return {
       props: {
         companies: data[0],
-        tests: data[1]
+        tests: data[1],
+        states: data[2],
       },
     }
   } catch(e) {
