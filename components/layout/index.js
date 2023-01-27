@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Cookie from '../../utils/Cookie';
 import Menu from '../menu';
 import LoadingSpinner from '../LoadingSpinner';
@@ -57,6 +60,7 @@ export default function Layout({ children }) {
         />
         <main>{children}</main>
         {isLoading && <LoadingSpinner/>}
+        <ToastContainer />
       </>
   )
 }

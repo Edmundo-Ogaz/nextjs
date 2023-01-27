@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { toast } from 'react-toastify';
+
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 
 import Layout from "../../components/layout";
@@ -22,9 +24,6 @@ export default function Search({companies, tests, states}) {
   const [ state, setState ] = useState();
 
   const [ list, setList ] = useState([]);
-
-  const [ message, setMessage ] = useState();
-  const [ error, setError ] = useState();
 
   const [ analysts, setAnalysts ] = useState([]);
 
@@ -60,9 +59,8 @@ export default function Search({companies, tests, states}) {
         setList(response)
         setIsSearching(false)
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
       setIsSearching(false)
+      toast.error(e.message);
     }
   }
 
@@ -91,8 +89,7 @@ export default function Search({companies, tests, states}) {
       console.log('Saved', USER_ANALYST)
       setAnalysts(USER_ANALYST)
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
+      toast.error(e.message);
     }
 	}
   
@@ -162,8 +159,6 @@ export default function Search({companies, tests, states}) {
               {isSearching ? 'Searching...' : 'Search'}
             </button>
             
-            {message && <><small style={ { color: 'green' } }>{message}</small></>}
-            {error && <><small style={ { color: 'red' } }>{error}</small></>}
           </div>
           <div>
             <table className={styles.search__list}>

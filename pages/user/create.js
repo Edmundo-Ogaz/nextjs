@@ -7,6 +7,7 @@ export default function CreateUser({companies, profiles}) {
 	console.log('CreateUser')
 
   const [ saving, setSaving ] = useState();
+  
   const [ rut, setRut ] = useState();
   const [ firstName, setFirstName ] = useState();
   const [ lastName, setLastName ] = useState();
@@ -14,12 +15,10 @@ export default function CreateUser({companies, profiles}) {
   const [ company, setCompany ] = useState();
   const [ profile, setProfile ] = useState();
 
-  const [ message, setMessage ] = useState();
-  const [ error, setError ] = useState();
-
   const handleSave = async () => {
     console.log('handleSave')
     try {
+      setSaving(true)
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users`,
         {
@@ -31,11 +30,11 @@ export default function CreateUser({companies, profiles}) {
         })
         .then(user => user.json())
         console.log('Saved', response)
-        setMessage('Saved')
-      return
+        toast.success('Saved');
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
+      toast.error(e.message);
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -101,8 +100,6 @@ export default function CreateUser({companies, profiles}) {
                 {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
               </select>
             </label>
-            {message && <><small style={ { color: 'green' } }>{message}</small></>}
-            {error && <><small style={ { color: 'red' } }>{error}</small></>}
             <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
               {saving ? 'Saving...' : 'Save'}
             </div>
