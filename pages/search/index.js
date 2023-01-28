@@ -54,13 +54,11 @@ export default function Search({companies, tests, states}) {
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/search?${query}`,
         )
         .then(postulant => postulant.json())
-        console.log('Searched', response)
-        setMessage('Searched')
         setList(response)
-        setIsSearching(false)
     } catch(e) {
-      setIsSearching(false)
       toast.error(e.message);
+    } finally {
+      setIsSearching(false)
     }
   }
 

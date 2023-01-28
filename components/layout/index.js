@@ -33,7 +33,11 @@ export default function Layout({ children }) {
         router.push('/test/assign');
         setIsLoading(true)
         break;
-      case '4-1':
+      case '4-1-1':
+        router.push('/user/list');
+        setIsLoading(true)
+        break;
+      case '4-1-2':
         router.push('/user/create');
         setIsLoading(true)
         break;

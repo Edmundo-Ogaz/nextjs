@@ -107,7 +107,7 @@ export default function CreateTestUser({companies, tests}) {
         `${URL_BASE}/users?companyId=${companyId}&profileId=${PROFILE_ANALYST_ID}`,
       )
       .then(users => users.json())
-      console.log('Saved', USER_ANALYST)
+      console.log('Analysts', USER_ANALYST)
       setAnalysts(USER_ANALYST)
     } catch(e) {
       console.error(e.message)

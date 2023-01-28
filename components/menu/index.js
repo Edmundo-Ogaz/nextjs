@@ -31,7 +31,10 @@ export default function App( props ) {
         <MenuItem key="3-3">Asignar prueba</MenuItem>
         </SubMenu>
         <SubMenu title={ <span className="submenu-title-wrapper">Administración</span> } key="4">
-          <MenuItem key="4-1">Crear Usuario</MenuItem>
+          <SubMenu title={ <span className="submenu-title-wrapper">Usuario</span> } key="4-1">
+            <MenuItem key="4-1-1">Listar</MenuItem>
+            <MenuItem key="4-1-2">Crear</MenuItem>
+          </SubMenu>
           <MenuItem key="4-2">Crear Postulante</MenuItem>
         </SubMenu>
         <SubMenu title={ <span className="submenu-title-wrapper">Salir</span> } key="5">
