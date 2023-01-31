@@ -25,10 +25,10 @@ export default function App( props ) {
           <MenuItem key="2-2">Buscar</MenuItem>
           <MenuItem key="2-3">IC</MenuItem>
         </SubMenu>
-        <SubMenu title={ <span className="submenu-title-wrapper">Pruebas</span> } key="3">
+        <SubMenu title={ <span className="submenu-title-wrapper">Tests</span> } key="3">
         <MenuItem key="3-1">IC</MenuItem>
         <MenuItem key="3-2">DISC</MenuItem>
-        <MenuItem key="3-3">Asignar prueba</MenuItem>
+        <MenuItem key="3-3">Asignar test</MenuItem>
         </SubMenu>
         <SubMenu title={ <span className="submenu-title-wrapper">Administración</span> } key="4">
           <SubMenu title={ <span className="submenu-title-wrapper">Usuario</span> } key="4-1">

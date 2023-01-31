@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import Link from 'next/link'
+
 import { toast } from 'react-toastify';
 
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
@@ -53,8 +55,11 @@ export default function Search({companies, tests, states}) {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/postulants/search?${query}`,
         )
-        .then(postulant => postulant.json())
-        setList(response)
+      const json = await response.json();
+      if (response?.ok === false) {
+        throw new Error(json?.error)
+      }
+      setList(json)
     } catch(e) {
       toast.error(e.message);
     } finally {
@@ -175,7 +180,15 @@ export default function Search({companies, tests, states}) {
                 {list.map(item => {
                 return(
                   <tr key={item.id} className={styles['search__list__body-row']}>
-                    <td>{item.postulant.firstName} {item.postulant.lastName}</td>
+                    <td>
+                      <Link
+                        href={{
+                          pathname: `/test/ic/certificate/${item.id}`,
+                        }}
+                      >
+                        {item.postulant.firstName} {item.postulant.lastName}
+                      </Link>
+                    </td>
                     <td>{item.postulant.email}</td>
                     <td>{item.company.name}</td>
                     <td>{item.analyst.firstName} {item.analyst.lastName}</td>

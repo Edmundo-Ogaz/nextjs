@@ -14,6 +14,6 @@ export default function Avatar() {
   }, []);
 
   return (
-    <span>{username}</span>
+    <span id="username">{username}</span>
   );
 }

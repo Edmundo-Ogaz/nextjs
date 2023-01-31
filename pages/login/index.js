@@ -50,12 +50,12 @@ export default function Login() {
       <div className={styles.title}>
         Login
       </div>
-      <input type="text" label="name" id="name" style={ {margin: '15px auto'} } onChange={ handleUsername } />
-      <input type="password" label="password" id="password" style={ {margin: '15px auto'} } onChange={ handlePassword } />
+      <input id="email" type="text" style={ {margin: '15px auto'} } onChange={ handleUsername } />
+      <input id="password" type="password" style={ {margin: '15px auto'} } onChange={ handlePassword } />
       {error && <><small style={ { color: 'red' } }>{error}</small></>}
-      <div className={styles['login-button']} onClick={ handleLogin } disabled={ isLoading }>
+      <button id="login" className={styles['login-button']} onClick={ handleLogin } disabled={ isLoading }>
         {isLoading ? 'Loading...' : 'Log in'}
-      </div>
+      </button>
       {isLoading && <LoadingSpinner/>}
     </div>
     );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import { ToastContainer } from 'react-toastify';
@@ -12,46 +12,45 @@ export default function Layout({ children }) {
 
   const router = useRouter();
 
-  const [ isLoading, setIsLoading ] = useState()
+  const [ isLoading, setIsLoading ] = useState(false)
 
   function handleMenu(info) {
     console.log('handleMenu')
     switch (info.key) {
       case '1':
-        router.push('/');
-        setIsLoading(true)
+        navigate('/')
         break;
       case '2-2':
-        router.push('/search');
-        setIsLoading(true)
+        navigate('/search')
         break;
       case '2-3':
-        router.push('/test/ic/list');
-        setIsLoading(true)
+        navigate('/test/ic/list')
         break;
       case '3-3':
-        router.push('/test/assign');
-        setIsLoading(true)
+        navigate('/test/assign')
         break;
       case '4-1-1':
-        router.push('/user/list');
-        setIsLoading(true)
+        navigate('/user/list')
         break;
       case '4-1-2':
-        router.push('/user/create');
-        setIsLoading(true)
+        navigate('/user/create')
         break;
       case '4-2':
-        router.push('/postulant/create');
-        setIsLoading(true)
+        navigate('/postulant/create')
         break;
       case '5-2':
         Cookie.remove()
-        router.push('/login');
-        setIsLoading(true)
+        navigate('/login')
         break;
       default:
         break;
+    }
+
+    function navigate(pathname) {
+      if (router.pathname !== pathname) {
+        router.push(pathname)
+        setIsLoading(true)
+      }
     }
   }
 

@@ -19,7 +19,6 @@ export default function List({companies, profiles}) {
   const [ rut, setRut ] = useState();
   const [ name, setName ] = useState();
   const [ email, setEmail ] = useState();
-
   const [ company, setCompany ] = useState();
   const [ profile, setProfile ] = useState();
 
@@ -33,6 +32,9 @@ export default function List({companies, profiles}) {
       if (rut)
         query = `rut=${rut}`
 
+      if (name)
+        query = `name=${name}`
+      
       if (email)
         query = `email=${email}`
       
@@ -45,8 +47,11 @@ export default function List({companies, profiles}) {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users?${query}`,
         )
-        .then(users => users.json())
-        setUsers(response)
+      const json = await response.json();
+      if (response?.ok === false) {
+        throw new Error(json?.error)
+      }
+      setUsers(json)
     } catch(e) {
       toast.error(e.message);
     } finally {
@@ -69,18 +74,6 @@ export default function List({companies, profiles}) {
   async function handleCompany(event) {
     const companyId = event.target.value
 		setCompany(event.target.value)
-    try {
-      const URL_BASE = process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API
-      const PROFILE_ANALYST_ID = process.env.NEXT_PUBLIC_PROFILE_ANALYST_ID
-      const USER_ANALYST = await fetch(
-        `${URL_BASE}/users?companyId=${companyId}&profileId=${PROFILE_ANALYST_ID}`,
-      )
-      .then(users => users.json())
-      console.log('Saved', USER_ANALYST)
-      setAnalysts(USER_ANALYST)
-    } catch(e) {
-      toast.error(e.message);
-    }
 	}
 
   function handleProfile(event) {
@@ -91,7 +84,7 @@ export default function List({companies, profiles}) {
     <>
       <Layout>
         <div>
-          <h1>Usuarios</h1>
+          <h2>Usuarios</h2>
           <div className={styles.search__form}>
             <label forhtml="rut" className={styles.search__label}>
               <span className={styles['search__label-text']}>Rut </span>
@@ -117,10 +110,10 @@ export default function List({companies, profiles}) {
               <span className={styles['search__label-text']}>Perfil </span>
               <select name="profile" id="profile" className={styles.search__input} onChange={ handleProfile}>
                 <option value="">Selecionar...</option>
-                {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.firstName} {profile.lastName}</option>)}
+                {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
               </select>
             </label>
-            <button className={styles.search__button} onClick={ handleSearch } disabled={ isSearching }>
+            <button id="search" className={styles.search__button} onClick={ handleSearch } disabled={ isSearching }>
               {isSearching ? 'Searching...' : 'Search'}
             </button>
           </div>
@@ -176,11 +169,13 @@ export async function getServerSideProps() {
   try {
     console.log('getServerSideProps')
     const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
+    const profiles = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/profiles`).then(profiles => profiles.json())
+    let data = await Promise.all([companies, profiles])
     console.log('getServerSideProps', companies)
     return {
       props: {
-        companies: companies,
-        profiles: []
+        companies: data[0],
+        profiles: data[1],
       },
     }
   } catch(e) {

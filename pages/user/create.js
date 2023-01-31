@@ -1,7 +1,15 @@
 import { useState } from 'react';
+
+import { toast } from 'react-toastify'
+
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
-import styles from './user.module.css';
+
 import Layout from '../../components/layout';
+import LoadingSpinner from '../../components/LoadingSpinner/index.js';
+
+import Cookie from '../../utils/Cookie.js';
+
+import styles from './user.module.css';
 
 export default function CreateUser({companies, profiles}) {
 	console.log('CreateUser')
@@ -19,17 +27,28 @@ export default function CreateUser({companies, profiles}) {
     console.log('handleSave')
     try {
       setSaving(true)
+      const data = {
+        rut, 
+        firstName, 
+        lastName, 
+        email, 
+        company, 
+        profile,
+        createdBy: Cookie.getUser().id
+      }
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users`,
         {
           method: 'POST',
-          body: JSON.stringify({rut, firstName, lastName, email, companyId: company, profileId: profile}),
+          body: JSON.stringify(data),
           headers: {
             'Content-Type': 'application/json'
           },
         })
-        .then(user => user.json())
-        console.log('Saved', response)
+        const json = await response.json();
+        if (response?.ok === false) {
+          throw new Error(json?.error)
+        }
         toast.success('Saved');
     } catch(e) {
       toast.error(e.message);
@@ -74,13 +93,13 @@ export default function CreateUser({companies, profiles}) {
               <span className={styles['user__label-text']}>Rut</span>
               <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
             </label>
-            <label forhtml="firt_name" className={styles.user__label}>
+            <label forhtml="firstName" className={styles.user__label}>
               <span className={styles['user__label-text']}>Nombres</span>
-              <input type="test" id="firt_name" size="50" className={styles.user__input} onChange={ handleFirstName } />
+              <input type="test" id="firstName" size="50" className={styles.user__input} onChange={ handleFirstName } />
             </label>
-            <label forhtml="last_name" className={styles.user__label}>
+            <label forhtml="lastName" className={styles.user__label}>
               <span className={styles['user__label-text']}>Apellidos</span>
-              <input type="text" id="last_name" size="50" className={styles.user__input} onChange={ handleLastName } />
+              <input type="text" id="lastName" size="50" className={styles.user__input} onChange={ handleLastName } />
             </label>
             <label forhtml="email" className={styles.user__label}>
               <span className={styles['user__label-text']}>Email</span>
@@ -100,11 +119,12 @@ export default function CreateUser({companies, profiles}) {
                 {profiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.name}</option>)}
               </select>
             </label>
-            <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
+            <button id="save" className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
               {saving ? 'Saving...' : 'Save'}
-            </div>
+            </button>
           </div>
         </div>
+        {saving && <LoadingSpinner/>}
       </Layout>
     </>
   );

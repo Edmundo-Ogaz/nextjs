@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Auth>
       <header style={{display: 'flex', justifyContent: 'space-between'}}>
-        <h1>Applicant</h1>
+        <h1 id="logo">Applicant</h1>
         <Avatar/>
       </header>
       <Component {...pageProps} />
