@@ -1,5 +1,5 @@
 run:
 	npm run dev
 
-cypress:
+test:
 	./node_modules/.bin/cypress open

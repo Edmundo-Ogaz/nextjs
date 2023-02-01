@@ -5,9 +5,9 @@ import Image from 'next/image'
 
 import { toast } from 'react-toastify';
 
-import LoadingSpinner from '../../components/LoadingSpinner/index.js';
-
+import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import Layout from "../../components/layout";
+import LoadingSpinner from '../../components/LoadingSpinner/index.js';
 
 import styles from './list.module.css';
 
@@ -164,6 +164,8 @@ export default function List({companies, profiles}) {
     </>
   );
 }
+
+List.Auth = WithPrivateRoute
 
 export async function getServerSideProps() {
   try {

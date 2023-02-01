@@ -35,7 +35,10 @@ export default function Layout({ children }) {
       case '4-1-2':
         navigate('/user/create')
         break;
-      case '4-2':
+      case '4-2-1':
+        navigate('/postulant/list')
+        break;
+      case '4-2-2':
         navigate('/postulant/create')
         break;
       case '5-2':

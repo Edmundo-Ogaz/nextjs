@@ -1,7 +1,6 @@
 const NAME_COOKIE = 'applicantApp'
 
 function add(user) {
-  console.log('add')
   if (!user || !user.id, !user.email) {
     return
   }
@@ -11,7 +10,6 @@ function add(user) {
 
 function getUser() {
   try {
-    console.log('getUser')
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${NAME_COOKIE}=`);
     if (parts.length === 2) {
@@ -25,7 +23,6 @@ function getUser() {
 
 function getId() {
   try {
-    console.log('getId')
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${NAME_COOKIE}=`);
     if (parts.length === 2) {
@@ -42,7 +39,6 @@ function remove() {
 }
 
 function strToObj(str) {
-  console.log('strToObj')
   str = str.split(',');
   var result = {};
   for (var i = 0; i < str.length; i++) {

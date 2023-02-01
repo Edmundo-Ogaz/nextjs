@@ -1,9 +1,12 @@
 import { useState } from 'react';
 
+import { toast } from 'react-toastify';
+
 import WithPrivateRoute from '../../components/WithPrivateRoute.js'
 import Layout from '../../components/layout';
 
 import styles from './postulant.module.css';
+import Cookie from '../../utils/Cookie.js';
 
 export default function CreatePostulant() {
 	console.log('CreatePostulant')
@@ -17,28 +20,38 @@ export default function CreatePostulant() {
   const [ sexo, setSexo ] = useState();
   const [ email, setEmail ] = useState();
 
-  const [ message, setMessage ] = useState();
-  const [ error, setError ] = useState();
-
   const handleSave = async () => {
-    console.log('handleSave')
     try {
+      console.log('handleSave')
+      setSaving(true)
+      const data = {
+        rut, 
+        firstName, 
+        lastName, 
+        age, 
+        sexo, 
+        email,
+        createdBy: Cookie.getUser().id
+      }
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/postulants`,
         {
           method: 'POST',
-          body: JSON.stringify({rut, firstName, lastName, age, sexo, email}),
+          body: JSON.stringify(data),
           headers: {
             'Content-Type': 'application/json'
           },
         }
       )
-      .then(postulant => postulant.json())
-      console.log('Saved', response)
-      setMessage('Saved')
+      const json = await response.json();
+      if (response?.ok === false) {
+        throw new Error(json?.error)
+      }
+      toast.success('Saved');
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
+      toast.error(e.message);
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -102,11 +115,9 @@ export default function CreatePostulant() {
               <span className={styles['user__label-text']}>Email</span>
               <input type="text" id="email" size="30"className={styles.user__input} onChange={ handleEmail } />
             </label>
-            {message && <><small style={ { color: 'gren' } }>{message}</small></>}
-            {error && <><small style={ { color: 'red' } }>{error}</small></>}
-            <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
+            <button className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
               {saving ? 'Saving...' : 'Save'}
-            </div>
+            </button>
           </div>
         </div>
       </Layout>

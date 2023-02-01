@@ -7,17 +7,18 @@ import WithPrivateRoute from '../../../components/WithPrivateRoute.js'
 import styles from './edit.module.css';
 import Layout from '../../../components/layout';
 
-export default function EditUser({user, companies, profiles}) {
-	console.log('EditUser')
+export default function EditPostulant({postulant}) {
+	console.log('EditPostulant')
+  postulant = postulant ? postulant : {} 
 
   const [ saving, setSaving ] = useState(false);
   
-  const [ rut, setRut ] = useState(user.rut);
-  const [ firstName, setFirstName ] = useState(user.firstName);
-  const [ lastName, setLastName ] = useState(user.lastName);
-  const [ email, setEmail ] = useState(user.email);
-  const [ company, setCompany ] = useState(user.company.id);
-  const [ profile, setProfile ] = useState(user.profile.id);
+  const [ rut, setRut ] = useState(postulant.rut);
+  const [ firstName, setFirstName ] = useState(postulant.firstName);
+  const [ lastName, setLastName ] = useState(postulant.lastName);
+  const [ email, setEmail ] = useState(postulant.email);
+  const [ age, setAge ] = useState(postulant.age ? postulant.age : 0);
+  const [ sexo, setSexo ] = useState(postulant.sexo);
 
   const handleSave = async () => {
     console.log('handleSave')
@@ -28,12 +29,12 @@ export default function EditUser({user, companies, profiles}) {
         firstName, 
         lastName, 
         email, 
-        company, 
-        profile, 
+        age, 
+        sexo, 
         updatedBy: Cookie.getUser().id
       }
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users/${user.id}`,
+        `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/postulants/${postulant.id}`,
         {
           method: 'PATCH',
           body: JSON.stringify(data),
@@ -41,9 +42,11 @@ export default function EditUser({user, companies, profiles}) {
             'Content-Type': 'application/json'
           },
         })
-        .then(user => user.json())
-        console.log('Saved', response)
-        toast.success('Saved');
+        const json = await response.json();
+      if (response?.ok === false) {
+        throw new Error(json?.error)
+      }
+      toast.success('Saved');
     } catch(e) {
       toast.error(e.message);
     } finally {
@@ -67,23 +70,23 @@ export default function EditUser({user, companies, profiles}) {
 		setEmail(event.target.value)
 	}
 
-  function handleCompany(event) {
-		setCompany(event.target.value)
+  function handleAge(event) {
+		setAge(event.target.value)
 	}
 
-  function handleProfile(event) {
-		setProfile(event.target.value)
+  function handleSexo(event) {
+		setSexo(event.target.value)
 	}
      
   return (
     <>
       <Layout>
         <div className={styles.user}>
-          <h2>Actualizar Usuario</h2>
+          <h2>Actualizar Postulante</h2>
           <div className={styles.user__form}>
             <label forhtml="rut" className={styles.user__label}>
               <span className={styles['user__label-text']}>Rut</span>
-              <input type="text" id="rut" value={rut} className={styles.user__input} onChange={ handleRut } disabled="true"/>
+              <input type="text" id="rut" value={rut} className={styles.user__input} onChange={ handleRut } />
             </label>
             <label forhtml="firt_name" className={styles.user__label}>
               <span className={styles['user__label-text']}>Nombres</span>
@@ -97,20 +100,16 @@ export default function EditUser({user, companies, profiles}) {
               <span className={styles['user__label-text']}>Email</span>
               <input type="text" id="email" value={email} size="30"className={styles.user__input} onChange={ handleEmail } />
             </label>
-            <label forhtml="company" className={styles.user__label}>
-              <span className={styles['user__label-text']}>Empresa</span>
-              <select name="company" id="company" value={company} className={styles.user__input} onChange={ handleCompany}>
-                <option value="">Selecionar...</option>
-                {companies.map((param) => 
-                  <option key={param.id} value={param.id}>{param.name}</option>)}
-              </select>
+            <label forhtml="age" className={styles.user__label}>
+              <span className={styles['user__label-text']}>Edad</span>
+              <input type="number" id="age" value={age} min="1" max="100" className={styles.user__input} onChange={ handleAge } />
             </label>
             <label forhtml="profile" className={styles.user__label}>
-              <span className={styles['user__label-text']}>Perfil</span>
-              <select name="profile" id="profile" value={profile} className={styles.user__input} onChange={ handleProfile}>
+              <span className={styles['user__label-text']}>Sexo</span>
+              <select name="sexo" id="sexo" value={sexo} className={styles.user__input} onChange={ handleSexo}>
                 <option value="">Selecionar...</option>
-                {profiles.map((param) => 
-                  <option key={param.id} value={param.id}>{param.name}</option>)}
+                <option value="femenino">Femenino</option>
+                <option value="masculino">Masculino</option>
               </select>
             </label>
             <button id="save" className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
@@ -123,22 +122,17 @@ export default function EditUser({user, companies, profiles}) {
   );
 }
 
-EditUser.Auth = WithPrivateRoute
+EditPostulant.Auth = WithPrivateRoute
 
 export async function getServerSideProps({params}) {
   try {
     console.log('getServerSideProps')
     const id = params.id
     
-    const user = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/users/${id}`).then(user => user.json())
-    const companies = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/companies`).then(companies => companies.json())
-    const profiles = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/profiles`).then(profiles => profiles.json())
-    let data = await Promise.all([user, companies, profiles]);
+    const postulant = await fetch(`${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/postulants/${id}`).then(user => user.json())
     return {
       props: {
-        user: data[0],
-        companies: data[1],
-        profiles: data[2],
+        postulant
       },
     }
   } catch(e) {

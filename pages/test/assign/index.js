@@ -1,64 +1,66 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
-import Cookie from '../../utils/Cookie.js';
-import WithPrivateRoute from '../../components/WithPrivateRoute.js'
+import { toast } from 'react-toastify';
 
-import Layout from "../../components/layout";
+import Cookie from '../../../utils/Cookie.js';
+import WithPrivateRoute from '../../../components/WithPrivateRoute.js'
+import Layout from "../../../components/layout";
+import LoadingSpinner from '../../../components/LoadingSpinner/index.js';
 
-import styles from './user.module.css';
+import styles from './assign.module.css';
 
-export default function CreateTestUser({companies, tests}) {
-	console.log('CreateTestUser')
+export default function AssignTest({companies, tests}) {
+	console.log('AssignTest')
 
-  const router = useRouter();
-
-  const [ saving, setSaving ] = useState();
-  const [ searching, setSearching ] = useState();
+  const [ isSaving, setIsSaving ] = useState(false);
+  const [ isSearching, setIsSearching ] = useState(false);
 
   const [ rut, setRut ] = useState();
   const [ firstName, setFirstName ] = useState();
   const [ lastName, setLastName ] = useState();
   const [ email, setEmail ] = useState();
 
-  const [ testId, setTestId ] = useState();
   const [ postulantId, setPostulantId ] = useState();
+  const [ testId, setTestId ] = useState();
   const [ company, setCompany ] = useState();
   const [ analyst, setAnalyst ] = useState();
 
-  const [ message, setMessage ] = useState();
-  const [ error, setError ] = useState();
-
   const [ analysts, setAnalysts ] = useState([]);
 
-  const handleSearch = async () => {
-    console.log('handleSearch')
+  const handleSearch = async (e) => {
     try {
+      e.preventDefault();
+      console.log('handleSearch')
+      setIsSearching(true)
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/postulants?rut=${rut}`,
         )
-        .then(postulant => postulant.json())
-        console.log('Searched', response)
-        setMessage('Searched')
-        setPostulantId(response.id)
-        setFirstName(response.firstName)
-        setLastName(response.lastName)
-        setEmail(response.email)
+      const arrJson = await response.json();
+      if (response?.ok === false) {
+        throw new Error(arrJson?.error)
+      } else if (!Array.isArray(arrJson) ||  arrJson.length != 1) {
+        throw new Error('BAD_REQUEST')
+      }
+      setPostulantId(arrJson[0].id)
+      setFirstName(arrJson[0].firstName)
+      setLastName(arrJson[0].lastName)
+      setEmail(arrJson[0].email)
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
+      toast.error(e.message);
+    } finally {
+      setIsSearching(false)
     }
   }
 
   const handleSave = async () => {
-    console.log('handleSave')
-
-    const assigner = {
-      companyId: company, 
-      analystId: analyst, 
-      createdById: Cookie.getUser().id
-    }
     try {
+      console.log('handleSave')
+      setIsSaving(true)
+      const assigner = {
+        companyId: company, 
+        analystId: analyst, 
+        createdById: Cookie.getUser().id
+      }
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API}/tests/${testId}/postulants/${postulantId}`,
         {
@@ -68,29 +70,19 @@ export default function CreateTestUser({companies, tests}) {
             'Content-Type': 'application/json'
           },
         })
-        .then(testAssigned => testAssigned.json())
-        console.log('Saved', response)
-        setMessage('Saved')
+      const json = await response.json();
+      if (response?.ok === false) {
+        throw new Error(json?.error)
+      }
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
+      toast.error(e.message);
+    } finally {
+      setIsSaving(false)
     }
   }
 
   function handleRut(event) {
 		setRut(event.target.value)
-	}
-
-  function handleFirstName(event) {
-		setFirstName(event.target.value)
-	}
-
-  function handleLastName(event) {
-		setLastName(event.target.value)
-	}
-
-  function handleEmail(event) {
-		setEmail(event.target.value)
 	}
   
   function handleTest(event) {
@@ -98,48 +90,48 @@ export default function CreateTestUser({companies, tests}) {
 	}
 
   async function handleCompany(event) {
-    const companyId = event.target.value
-		setCompany(event.target.value)
     try {
+      setIsSearching(false)
+      const companyId = event.target.value
+      setCompany(event.target.value)
       const URL_BASE = process.env.NEXT_PUBLIC_NETLIFY_SERVERLESS_API
       const PROFILE_ANALYST_ID = process.env.NEXT_PUBLIC_PROFILE_ANALYST_ID
-      const USER_ANALYST = await fetch(
+      const response = await fetch(
         `${URL_BASE}/users?companyId=${companyId}&profileId=${PROFILE_ANALYST_ID}`,
       )
-      .then(users => users.json())
-      console.log('Analysts', USER_ANALYST)
-      setAnalysts(USER_ANALYST)
+      const json = await response.json();
+      if (response?.ok === false) {
+        throw new Error(json?.error)
+      }
+      setAnalysts(json)
     } catch(e) {
-      console.error(e.message)
-      setError(e.message)
+      toast.error(e.message);
+    } finally {
+      setIsSearching(false)
     }
 	}
 
   function handleAnalyst(event) {
 		setAnalyst(event.target.value)
 	}
-
-  function createPostulant(event) {
-    router.push('/postulant/create')
-  }
      
   return (
     <>
       <Layout>
         <div className={styles.user}>
-          <h2>
-          Asignar Test a Postulante
-          </h2>
-          <div className={styles.user__form}>
-            <label forhtml="rut" className={styles.user__label}>
-              <span className={styles['user__label-text']}>Rut</span>
-              <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
-            </label>
-            <div className={styles['user__button']} onClick={ handleSearch } disabled={ searching }>
-              {searching ? 'Searching...' : 'Search'}
-            </div>
-            <p>Nombre: {firstName} {lastName}</p>
-            <p>Email: {email}</p>
+          <h2>Asignar Test a Postulante</h2>
+          <form className={styles.user__form}>
+            <section id="search-section">
+              <label forhtml="rut" className={styles.user__label}>
+                <span className={styles['user__label-text']}>Rut</span>
+                <input type="text" id="rut" className={styles.user__input} onChange={ handleRut } />
+              </label>
+              <button id="search-button" className={styles['user__button']} onClick={ handleSearch } disabled={ isSearching }>
+                {isSearching ? 'Searching...' : 'Search'}
+              </button>
+              <p>Nombre: {firstName} {lastName}</p>
+              <p>Email: {email}</p>
+            </section>
             <label forhtml="test" className={styles.user__label}>
               <span className={styles['user__label-text']}>Test</span>
               <select name="test" id="test" className={styles.user__input} onChange={ handleTest}>
@@ -161,19 +153,18 @@ export default function CreateTestUser({companies, tests}) {
                 {analysts.map((analyst) => <option key={analyst.id} value={analyst.id}>{analyst.firstName} {analyst.lastName}</option>)}
               </select>
             </label>
-            {message && <><small style={ { color: 'green' } }>{message}</small></>}
-            {error && <><small style={ { color: 'red' } }>{error}</small></>}
-            <div className={styles['user__button']} onClick={ handleSave } disabled={ saving }>
-              {saving ? 'Saving...' : 'Save'}
-            </div>
-          </div>
+            <button className={styles['user__button']} onClick={ handleSave } disabled={ isSaving }>
+              {isSaving ? 'Saving...' : 'Save'}
+            </button>
+          </form>
         </div>
+        {(isSearching || isSaving) && <LoadingSpinner/>}
       </Layout>
     </>
   );
 }
 
-CreateTestUser.Auth = WithPrivateRoute
+AssignTest.Auth = WithPrivateRoute
 
 export async function getServerSideProps() {
   try {
